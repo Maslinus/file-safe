@@ -1,19 +1,25 @@
 "use client";
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const createFile = mutation({
   args: {
     name: v.string(),
     // fileId: v.id("_storage"),
-    // orgId: v.string(),
+    orgId: v.string(),
     // type: fileTypes,
   },
   async handler(ctx, args) {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if(!identity){
+        throw new ConvexError('you must be lagged in to upload a file')
+    }
 
     await ctx.db.insert("files",{
         name: args.name,
+        orgId: args.orgId,
     });
     // const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
@@ -33,15 +39,24 @@ export const createFile = mutation({
 
 export const getFiles = query({
   args: {
-    // orgId: v.string(),
+    orgId: v.string(),
     // query: v.optional(v.string()),
     // favorites: v.optional(v.boolean()),
     // deletedOnly: v.optional(v.boolean()),
     // type: v.optional(fileTypes),
   },
   async handler(ctx, args) {
-    return ctx.db.query('files').collect();
 
+    const identity = await ctx.auth.getUserIdentity();
+
+    if(!identity){
+        return [];
+    }
+
+    return ctx.db
+    .query('files')
+    .withIndex('by_orgId', q => q.eq('orgId', args.orgId))
+    .collect();
 //     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
 //     if (!hasAccess) {
