@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Приложение для хранения файлов (Next.js + Convex + Clerk)
 
-## Getting Started
+Полноценное full-stack приложение для хранения и управления файлами с поддержкой организаций, загрузки файлов, ролевой авторизации, избранного и корзины. Включает множество UI-компонентов: диалоги, модальные окна, тосты, выпадающие списки и другие.
 
-First, run the development server:
+## Основные возможности
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* Аутентификация и авторизация пользователей с Clerk
+* Работа с базой данных через Convex
+* Поддержка организаций и разграничение доступа по OrgId
+* Загрузка и удаление файлов с индикаторами загрузки и уведомлениями
+* Система избранного и возможность восстановления удалённых файлов
+* Ролевая авторизация для управления правами доступа
+* Поиск, фильтрация и удобный файловый браузер
+* Современный адаптивный интерфейс с различными UI-компонентами
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Технологии
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Next.js
+* Convex
+* Clerk
+* shadcn/ui
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Как скачать и запустить
 
-## Learn More
+1. Клонируйте репозиторий:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone https://github.com/web...
+   cd <название_папки_репозитория>
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Установите зависимости:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   # или
+   yarn install
+   ```
 
-## Deploy on Vercel
+3. Настройте переменные окружения
+   Создайте файл `.env.local` и добавьте необходимые ключи для Clerk и Convex (пример в документации проекта или README репозитория).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Запустите локальный сервер разработки:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm run dev
+   # или
+   yarn dev
+   ```
+
+5. Откройте в браузере:
+
+   ```
+   http://localhost:3000
+   ```
