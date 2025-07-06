@@ -25,8 +25,7 @@
 1. Клонируйте репозиторий:
 
    ```bash
-   git clone https://github.com/web...
-   cd <название_папки_репозитория>
+   https://github.com/Maslinus/file-safe.git
    ```
 
 2. Установите зависимости:
