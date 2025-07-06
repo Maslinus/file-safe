@@ -13,13 +13,13 @@ export default defineSchema({
     tokenIdentifier: v.string(),
     // name: v.optional(v.string()),
     // image: v.optional(v.string()),
-    // orgIds: v.array(
-    //   v.object({
-    //     orgId: v.string(),
-    //     role: roles,
-    //   })
-    // ), 
+    orgIds: v.array(
+      v.object({
+        orgId: v.string(),
+        // role: roles,
+      })
+    ), 
   })
-  // .index("by_tokenIdentifier", ["tokenIdentifier"]),
+  .index("by_tokenIdentifier", ["tokenIdentifier"]),
 
 });

@@ -1,7 +1,48 @@
 "use client";
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+import { getUser } from "./users";
+
+export async function hasAccessToOrg(
+  ctx: QueryCtx | MutationCtx,
+  tokenIdentifier: string,
+  orgId: string
+) {
+  // const identity = await ctx.auth.getUserIdentity();
+
+  const user = await getUser(ctx, tokenIdentifier);
+
+  // if (!identity) {
+  //   return null;
+  // }
+
+  // const user = await ctx.db
+  //   .query("users")
+  //   .withIndex("by_tokenIdentifier", (q) =>
+  //     q.eq("tokenIdentifier", identity.tokenIdentifier)
+  //   )
+  //   .first();
+
+  // if (!user) {
+  //   return null;
+  // }
+
+  const hasAccess =
+  user.orgIds.includes(orgId) ||
+  user.tokenIdentifier.includes(orgId);
+
+  return hasAccess
+  // const hasAccess =
+  //   user.orgIds.some((item) => item.orgId === orgId) ||
+  //   user.tokenIdentifier.includes(orgId);
+
+  // if (!hasAccess) {
+  //   return null;
+  // }
+
+  // return { user };
+}
 
 export const createFile = mutation({
   args: {
@@ -17,15 +58,20 @@ export const createFile = mutation({
         throw new ConvexError('you must be lagged in to upload a file')
     }
 
+    const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, args.orgId);
+
+    if (!hasAccess) {
+      throw new ConvexError("you do not have access to this org");
+    }
+
+    // if (!user.orgIds.includes({orgId: args.orgId}) && user.tokenIdentifier !== identity.tokenIdentifier){
+    //   throw new ConvexError("You do not have access to this org")
+    // }
+
     await ctx.db.insert("files",{
         name: args.name,
         orgId: args.orgId,
     });
-    // const hasAccess = await hasAccessToOrg(ctx, args.orgId);
-
-    // if (!hasAccess) {
-    //   throw new ConvexError("you do not have access to this org");
-    // }
 
     // await ctx.db.insert("files", {
     //   name: args.name,
@@ -53,15 +99,16 @@ export const getFiles = query({
         return [];
     }
 
-    return ctx.db
-    .query('files')
-    .withIndex('by_orgId', q => q.eq('orgId', args.orgId))
-    .collect();
-//     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
+    const hasAccess = await hasAccessToOrg(ctx, identity.tokenIdentifier, args.orgId);
 
-//     if (!hasAccess) {
-//       return [];
-//     }
+    if(!hasAccess){
+        return [];
+    }
+
+    return ctx.db
+      .query('files')
+      .withIndex('by_orgId', q => q.eq('orgId', args.orgId))
+      .collect();
 
 //     let files = await ctx.db
 //       .query("files")
